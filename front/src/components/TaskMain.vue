@@ -26,8 +26,12 @@
         </form>
       </div>
     </div>
-    <TaskList v-bind:tasks="tasks" v-bind:onDone="onDone" :onDelete="onDelete" />
-    <Toast/>
+    <TaskList
+      v-bind:tasks="tasks"
+      v-bind:onDone="onDone"
+      :onDelete="onDelete"
+    />
+    <Toast />
   </div>
 </template>
 
@@ -36,7 +40,9 @@ import TaskList from "./TaskList.vue";
 import axios from "axios";
 export default {
   mounted() {
-    axios.post("/op", {}).then((res) => (this.tasks = res.data.all));
+    axios
+      .get("/")
+      .then((res) => (this.tasks = res.data.all));
   },
   name: "TaskMain",
   components: { TaskList },
@@ -47,24 +53,30 @@ export default {
     onSubmit() {
       if (this.newTask != "") {
         axios
-          .create("create", { task: this.newTask })
+          .post("/", { title:this.newTask, done: false })
           .then((res) => (this.tasks = res.data.all));
       }
       this.newTask = "";
     },
     onDone(id, done) {
       axios
-        .patch("update", { id, done })
+        .put(`task/${id}`, {done: !done})
         .then((res) => (this.tasks = res.data.all));
     },
-    onDelete(id, done){
-      if(done){
-        axios.delete("delete", {id, done})
-        .then((res) => (this.tasks = res.data.all));
+    onDelete(id, done) {
+      if (done) {
+        axios
+          .delete(`task/${id}`, {})
+          .then((res) => (this.tasks = res.data.all));
       } else {
-        this.$toast.add({severity:'warn', summary:'Attention!',detail:'Complete the task first!', life: 3000 })
+        this.$toast.add({
+          severity: "warn",
+          summary: "Attention!",
+          detail: "Complete the task first!",
+          life: 3000,
+        });
       }
-    }
+    },
   },
   data() {
     return {

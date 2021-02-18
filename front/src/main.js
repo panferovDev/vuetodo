@@ -13,7 +13,7 @@ import Checkbox from 'primevue/checkbox';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 
-Axios.defaults.baseURL = 'http://127.0.0.1:3000/'
+Axios.defaults.baseURL = 'http://127.0.0.1:3000'
 
 const app = createApp(App);
 app.use(PrimeVue);
